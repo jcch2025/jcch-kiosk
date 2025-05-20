@@ -1,0 +1,17 @@
+{
+  "name": "kiosk-websocket-server",
+  "version": "1.0.0",
+  "description": "웹 키오스크 웹소켓 서버",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "socket.io": "^4.4.1"
+  },
+  "engines": {
+    "node": "14.x"
+  }
+}

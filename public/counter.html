@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>꿈빛뜰안 카운터 패널</title>
+    <link rel="stylesheet" href="counter-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="logo-container">
+                <img src="https://via.placeholder.com/80" alt="꿈빛뜰안 로고" class="logo">
+                <h1>꿈빛뜰안</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active">
+                        <a href="#orders">
+                            <i class="fas fa-list-alt"></i>
+                            <span>주문 관리</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#settings">
+                            <i class="fas fa-cog"></i>
+                            <span>설정</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> 로그아웃
+                </button>
+                <p>© 2025 꿈빛뜰안</p>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <header class="dashboard-header">
+                <div class="header-title">
+                    <h2><i class="fas fa-list-alt"></i> 주문 관리</h2>
+                </div>
+                <div class="header-actions">
+                    <div class="date-display">
+                        <i class="far fa-calendar-alt"></i>
+                        <span id="current-date"></span>
+                    </div>
+                    <button id="export-csv" class="export-btn">
+                        <i class="fas fa-file-export"></i>
+                        주문 내역 내보내기
+                    </button>
+                </div>
+            </header>
+            
+            <section class="orders-section">
+                <div class="order-filters">
+                    <div class="filter-group">
+                        <label for="status-filter">상태 필터:</label>
+                        <select id="status-filter">
+                            <option value="all">모든 상태</option>
+                            <option value="pending">대기중</option>
+                            <option value="completed">완료</option>
+                            <option value="cancelled">취소</option>
+                        </select>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="search-orders" placeholder="주문 검색...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                
+                <div class="orders-container">
+                    <table id="orders-table">
+                        <thead>
+                            <tr>
+                                <th>주문번호</th>
+                                <th>주문자</th>
+                                <th>주문시각</th>
+                                <th>주문내역</th>
+                                <th>총액</th>
+                                <th>상태</th>
+                                <th>작업</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-list">
+                            <!-- 주문 목록이 여기에 추가됩니다 -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="no-orders-message" style="display: none;">
+                    <i class="fas fa-coffee"></i>
+                    <p>아직 주문이 없습니다.</p>
+                </div>
+            </section>
+            
+            <div id="order-details-modal" class="modal">
+                <div class="modal-content order-details">
+                    <div class="modal-header">
+                        <h3>주문 상세 정보</h3>
+                        <button class="close-modal"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="order-info">
+                            <div class="info-group">
+                                <span class="label">주문번호:</span>
+                                <span id="detail-order-id" class="value"></span>
+                            </div>
+                            <div class="info-group">
+                                <span class="label">주문자:</span>
+                                <span id="detail-customer-name" class="value"></span>
+                            </div>
+                            <div class="info-group">
+                                <span class="label">주문시각:</span>
+                                <span id="detail-order-time" class="value"></span>
+                            </div>
+                            <div class="info-group">
+                                <span class="label">상태:</span>
+                                <span id="detail-status" class="value status"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="order-items">
+                            <h4>주문 항목</h4>
+                            <table id="detail-items-table">
+                                <thead>
+                                    <tr>
+                                        <th>메뉴</th>
+                                        <th>옵션</th>
+                                        <th>수량</th>
+                                        <th>가격</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="detail-items-list">
+                                    <!-- 주문 항목이 여기에 추가됩니다 -->
+                                </tbody>
+                            </table>
+                            <div class="order-total">
+                                <span>총액:</span>
+                                <span id="detail-total-amount"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="detail-complete-btn" class="complete-btn">완료 처리</button>
+                        <button id="detail-cancel-btn" class="cancel-btn">주문 취소</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="counter.js"></script>
+</body>
+</html>

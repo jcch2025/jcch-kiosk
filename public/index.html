@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>꿈빛뜰안 키오스크</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+                <h1>꿈빛뜰안</h1>
+        </header>
+        
+        <section class="customer-info">
+            <div class="section-header">
+                <i class="fas fa-user"></i>
+                <h2>주문자 정보</h2>
+            </div>
+            <div class="input-group">
+                <label for="customer-name">이름</label>
+                <input type="text" id="customer-name" placeholder="이름을 입력해주세요" required>
+            </div>
+        </section>
+        
+        <section class="menu-tabs">
+            <div class="tabs">
+                <button class="tab-btn active" data-category="coffee">
+                    <i class="fas fa-mug-hot"></i>
+                    <span>COFFEE</span>
+                </button>
+                <button class="tab-btn" data-category="ade">
+                    <i class="fas fa-glass-martini-alt"></i>
+                    <span>ADE</span>
+                </button>
+                <button class="tab-btn" data-category="non-coffee">
+                    <i class="fas fa-coffee"></i>
+                    <span>NON COFFEE</span>
+                </button>
+                <button class="tab-btn" data-category="tea">
+                    <i class="fas fa-mug-saucer"></i>
+                    <span>TEA</span>
+                </button>
+            </div>
+        </section>
+        
+        <section class="menu-section">
+            <div class="menu-container" id="coffee">
+                <div class="menu-item" data-id="americano" data-name="아메리카노" data-price="1000" data-temp-option="true">
+                    <img src="https://i.ibb.co/yTB9Kw5/1-000.jpg" alt="아메리카노">
+                    <h3>아메리카노</h3>
+                    <p class="price">1,000원</p>
+                    <div class="temp-option">
+                        <label><input type="radio" name="temp-americano" value="hot" checked> HOT</label>
+                        <label><input type="radio" name="temp-americano" value="ice"> ICE</label>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="decrease">-</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+                
+                <div class="menu-item" data-id="cafelatte" data-name="카페라떼" data-price="1500" data-temp-option="true">
+                    <img src="https://i.ibb.co/DDvRZvRW/1-500.jpg" alt="카페라떼">
+                    <h3>카페라떼</h3>
+                    <p class="price">1,500원</p>
+                    <div class="temp-option">
+                        <label><input type="radio" name="temp-cafelatte" value="hot" checked> HOT</label>
+                        <label><input type="radio" name="temp-cafelatte" value="ice"> ICE</label>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="decrease">-</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+                
+                <div class="menu-item" data-id="vanillalatte" data-name="바닐라라떼" data-price="1500" data-temp-option="true">
+                    <img src="https://i.ibb.co/KcTTywcb/1-500.jpg" alt="바닐라라떼">
+                    <h3>바닐라라떼</h3>
+                    <p class="price">1,500원</p>
+                    <div class="temp-option">
+                        <label><input type="radio" name="temp-vanillalatte" value="hot" checked> HOT</label>
+                        <label><input type="radio" name="temp-vanillalatte" value="ice"> ICE</label>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="decrease">-</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+                
+                <div class="menu-item" data-id="einspanner" data-name="아인슈페너" data-price="1500" data-temp-option="true">
+                    <img src="https://i.ibb.co/Rp3VJHQQ/1-500.jpg" alt="아인슈페너">
+                    <h3>아인슈페너</h3>
+                    <p class="price">1,500원</p>
+                    <div class="temp-option">
+                        <label><input type="radio" name="temp-einspanner" value="hot" checked> HOT</label>
+                        <label><input type="radio" name="temp-einspanner" value="ice"> ICE</label>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="decrease">-</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+                
+                <div class="menu-item" data-id="condensedlatte" data-name="연유라떼" data-price="1500" data-temp-option="true">
+                    <img src="https://i.ibb.co/DDJzbXHQ/1-500.jpg" alt="연유라떼">
+                    <h3>연유라떼</h3>
+                    <p class="price">1,500원</p>
+                    <div class="temp-option">
+                        <label><input type="radio" name="temp-condensedlatte" value="hot" checked> HOT</label>
+                        <label><input type="radio" name="temp-condensedlatte" value="ice"> ICE</label>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="decrease">-</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+                
+                <div class="menu-item" data-id="creamlatte" data-name="크림라떼" data-price="2000" data-temp-option="true">
+                    <img src="https://i.ibb.co/r2HZhPyq/2-000.jpg" alt="크림라떼">
+                    <h3>크림라떼</h3>
+                    <p class="price">2,000원</p>
+                    <div class="temp-option">
+                        <label><input type="radio" name="temp-creamlatte" value="hot" checked> HOT</label>
+                        <label><input type="radio" name="temp-creamlatte" value="ice"> ICE</label>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="decrease">-</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-container" id="ade" style="display: none;">
+                <div class="menu-item" data-id="lemonade" data-name="레몬에이드" data-price="1500" data-temp-option="false">
+                    <img src="https://i.ibb.co/cWVJHXv/1-500.jpg" alt="레몬에이드">
+                    <h3>레몬에이드</h3>
+                    <p class="price">1,500원</p>
+                    <div class="temp-option">
+                        <span class="ice-only">ICE ONLY</span>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="decrease">-</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+                
+                <div class="menu-item" data-id="shinemuscat" data-name="샤인머스캣에이드" data-price="1500" data-temp-option="false">
+                    <img src="https://i.ibb.co/r27bFSpz/1-500.jpg" alt="샤인머스캣에이드">
+                    <h3>샤인머스캣에이드</h3>
+                    <p class="price">1,500원</p>
+                    <div class="temp-option">
+                        <span class="ice-only">ICE ONLY</span>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="decrease">-</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+                
+                <div class="menu-item" data-id="applemango" data-name="애플망고에이드" data-price="1500" data-temp-option="false">
+                    <img src="https://i.ibb.co/4RgTMWhL/1-500.jpg" alt="애플망고에이드">
+                    <h3>애플망고에이드</h3>
+                    <p class="price">1,500원</p>
+                    <div class="temp-option">
+                        <span class="ice-only">ICE ONLY</span>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="decrease">-</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+                
+                <div class="menu-item" data-id="omija" data-name="오미자에이드" data-price="1500" data-temp-option="false">
+                    <img src="https://i.ibb.co/VYNYjgt9/1-500.jpg" alt="오미자에이드">
+                    <h3>오미자에이드</h3>
+                    <p class="price">1,500원</p>
+                    <div class="temp-option">
+                        <span class="ice-only">ICE ONLY</span>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="decrease">-</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+                
+                <div class="menu-item" data-id="grapefruit" data-name="자몽에이드" data-price="1500" data-temp-option="false">
+                    <img src="https://i.ibb.co/LhC3kmdq/1-500.jpg" alt="자몽에이드">
+                    <h3>자몽에이드</h3>
+                    <p class="price">1,500원</p>
+                    <div class="temp-option">
+                        <span class="ice-only">ICE ONLY</span>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="decrease">-</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-container" id="non-coffee" style="display: none;">
+                <div class="menu-item" data-id="milktea" data-name="밀크티" data-price="1500" data-temp-option="false">
+                    <img src="https://i.ibb.co/6cNb7Ljd/1-500.jpg" alt="밀크티">
+                    <h3>밀크티</h3>
+                    <p class="price">1,500원</p>
+                    <div class="quantity-control">
+                        <button class="decrease">-</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-container" id="tea" style="display: none;">
+                <div class="menu-item" data-id="rooibos" data-name="루이보스애플레몬티" data-price="1000" data-temp-option="true">
+                    <img src="https://i.ibb.co/d4pRvdzM/1-000.jpg" alt="루이보스애플레몬티">
+                    <h3>루이보스애플레몬티</h3>
+                    <p class="price">1,000원</p>
+                    <div class="temp-option">
+                        <label><input type="radio" name="temp-rooibos" value="hot" checked> HOT</label>
+                        <label><input type="radio" name="temp-rooibos" value="ice"> ICE</label>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="decrease">-</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+                
+                <div class="menu-item" data-id="earlgrey" data-name="얼그레이티" data-price="1000" data-temp-option="true">
+                    <img src="https://i.ibb.co/7JBrxGTB/1-000.jpg" alt="얼그레이티">
+                    <h3>얼그레이티</h3>
+                    <p class="price">1,000원</p>
+                    <div class="temp-option">
+                        <label><input type="radio" name="temp-earlgrey" value="hot" checked> HOT</label>
+                        <label><input type="radio" name="temp-earlgrey" value="ice"> ICE</label>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="decrease">-</button>
+                        <span class="quantity">0</span>
+                        <button class="increase">+</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="cart-section">
+            <div class="section-header">
+                <i class="fas fa-shopping-cart"></i>
+                <h2>장바구니</h2>
+            </div>
+            <div class="cart-items">
+                <!-- 주문 항목이 여기에 추가됩니다 -->
+            </div>
+            <div class="cart-total">
+                <p>총 금액: <span id="total-amount">0</span>원</p>
+            </div>
+            <button id="order-btn" class="order-btn">
+                <i class="fas fa-check-circle"></i> 주문하기
+            </button>
+        </section>
+    </div>
+    
+    <div id="order-complete" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-check-circle success-icon"></i>
+            <h2>주문이 완료되었습니다!</h2>
+            <div class="order-number-container">
+                <p>주문번호</p>
+                <span id="order-number"></span>
+            </div>
+            <button id="close-modal">확인</button>
+        </div>
+    </div>
+    
+    <script src="client.js"></script>
+</body>
+</html>
