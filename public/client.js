@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // 소켓 연결
-    const socket = io('https://your-websocket-server-url');
+    const socket = io('https://jcch-kiosk.onrender.com');
     
     // DOM 요소
     const customerNameInput = document.getElementById('customer-name');
