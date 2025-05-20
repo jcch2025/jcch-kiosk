@@ -49,6 +49,10 @@
                         <i class="far fa-calendar-alt"></i>
                         <span id="current-date"></span>
                     </div>
+                    <button id="delete-all-btn" class="delete-all-btn">
+                        <i class="fas fa-trash-alt"></i>
+                        전체 삭제
+                    </button>
                     <button id="export-csv" class="export-btn">
                         <i class="fas fa-file-export"></i>
                         주문 내역 내보내기
@@ -73,10 +77,17 @@
                     </div>
                 </div>
                 
+                <div class="bulk-actions">
+                    <button id="delete-selected-btn" class="delete-selected-btn" disabled>
+                        <i class="fas fa-trash"></i> 선택 삭제
+                    </button>
+                </div>
+                
                 <div class="orders-container">
                     <table id="orders-table">
                         <thead>
                             <tr>
+                                <th><input type="checkbox" id="select-all-checkbox"></th>
                                 <th>주문번호</th>
                                 <th>주문자</th>
                                 <th>주문시각</th>
@@ -148,6 +159,22 @@
                     <div class="modal-footer">
                         <button id="detail-complete-btn" class="complete-btn">완료 처리</button>
                         <button id="detail-cancel-btn" class="cancel-btn">주문 취소</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="confirm-modal" class="modal">
+                <div class="modal-content confirm-dialog">
+                    <div class="modal-header">
+                        <h3>삭제 확인</h3>
+                        <button class="close-modal"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="confirm-message">정말로 선택한 주문을 삭제하시겠습니까?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirm-yes" class="confirm-btn yes-btn">예</button>
+                        <button id="confirm-no" class="confirm-btn no-btn">아니요</button>
                     </div>
                 </div>
             </div>
