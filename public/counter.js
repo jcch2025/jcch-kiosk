@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('current-date').textContent = currentDate.toLocaleDateString('ko-KR', dateOptions);
     
     // 소켓 연결
-    const socket = io('https://your-websocket-server-url');
+    const socket = io('https://jcch-kiosk.onrender.com');
     
     // DOM 요소
     const ordersList = document.getElementById('orders-list');
