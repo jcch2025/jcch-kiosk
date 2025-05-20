@@ -21,9 +21,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('search-orders');
     const noOrdersMessage = document.querySelector('.no-orders-message');
     const orderDetailsModal = document.getElementById('order-details-modal');
+    const selectAllCheckbox = document.getElementById('select-all-checkbox');
+    const deleteSelectedBtn = document.getElementById('delete-selected-btn');
+    const deleteAllBtn = document.getElementById('delete-all-btn');
+    const confirmModal = document.getElementById('confirm-modal');
+    const confirmMessage = document.getElementById('confirm-message');
+    const confirmYesBtn = document.getElementById('confirm-yes');
+    const confirmNoBtn = document.getElementById('confirm-no');
     
     // 주문 데이터 저장
     let orders = [];
+    
+    // 삭제 모드 상태 변수
+    let deleteMode = null; // 'selected' 또는 'all' 또는 'single' 또는 null
+    let selectedOrderIds = [];
     
     // 소켓 이벤트 리스너
     socket.on('connect', () => {
@@ -55,6 +66,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    socket.on('orders-deleted', (deletedIds) => {
+        // 서버에서 삭제 확인 시 로컬 데이터에서도 삭제
+        orders = orders.filter(order => !deletedIds.includes(order.id));
+        renderOrders();
+    });
+    
     // 주문 목록 렌더링
     function renderOrders(filteredOrders = null) {
         const ordersToRender = filteredOrders || orders;
@@ -62,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (ordersToRender.length === 0) {
             noOrdersMessage.style.display = 'block';
+            deleteSelectedBtn.disabled = true;
         } else {
             noOrdersMessage.style.display = 'none';
             
@@ -85,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }).join(', ');
                 
                 tr.innerHTML = `
+                    <td><input type="checkbox" class="order-checkbox" data-id="${order.id}"></td>
                     <td>${order.id}</td>
                     <td>${order.customerName}</td>
                     <td>${formattedTime}</td>
@@ -103,6 +122,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <i class="fas fa-times"></i> 취소
                             </button>
                         ` : ''}
+                        <button class="delete-btn" data-id="${order.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </td>
                 `;
                 
@@ -131,7 +153,40 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateOrderStatus(orderId, 'cancelled');
                 });
             });
+            
+            // 개별 삭제 버튼 이벤트 리스너
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const orderId = btn.dataset.id;
+                    deleteMode = 'single';
+                    selectedOrderIds = [orderId];
+                    confirmMessage.textContent = '정말로 이 주문을 삭제하시겠습니까?';
+                    confirmModal.style.display = 'flex';
+                });
+            });
+            
+            // 체크박스 이벤트 리스너
+            document.querySelectorAll('.order-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    updateSelectedOrders();
+                });
+            });
         }
+    }
+    
+    // 선택된 주문 업데이트
+    function updateSelectedOrders() {
+        const checkboxes = document.querySelectorAll('.order-checkbox');
+        selectedOrderIds = Array.from(checkboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.dataset.id);
+        
+        // 선택 삭제 버튼 활성화/비활성화
+        deleteSelectedBtn.disabled = selectedOrderIds.length === 0;
+        
+        // 전체 선택 체크박스 상태 업데이트
+        const allChecked = selectedOrderIds.length === checkboxes.length && checkboxes.length > 0;
+        selectAllCheckbox.checked = allChecked;
     }
     
     // 주문 상태 업데이트
@@ -145,6 +200,22 @@ document.addEventListener('DOMContentLoaded', function() {
             
             renderOrders();
         }
+    }
+    
+    // 주문 삭제 함수
+    function deleteOrders(orderIds) {
+        // 서버에 삭제 요청 (소켓 연결 시)
+        socket.emit('delete-orders', orderIds);
+        
+        // 로컬 데이터에서 삭제
+        orders = orders.filter(order => !orderIds.includes(order.id));
+        
+        // 화면 갱신
+        renderOrders();
+        
+        // 선택 상태 초기화
+        selectedOrderIds = [];
+        updateSelectedOrders();
     }
     
     // 주문 상태 텍스트 반환
@@ -226,15 +297,74 @@ document.addEventListener('DOMContentLoaded', function() {
         orderDetailsModal.style.display = 'flex';
     }
     
+    // 전체 선택 체크박스 이벤트
+    selectAllCheckbox.addEventListener('change', () => {
+        const checkboxes = document.querySelectorAll('.order-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+        updateSelectedOrders();
+    });
+    
+    // 선택 삭제 버튼 이벤트
+    deleteSelectedBtn.addEventListener('click', () => {
+        if (selectedOrderIds.length > 0) {
+            deleteMode = 'selected';
+            confirmMessage.textContent = `정말로 선택한 ${selectedOrderIds.length}개의 주문을 삭제하시겠습니까?`;
+            confirmModal.style.display = 'flex';
+        }
+    });
+    
+    // 전체 삭제 버튼 이벤트
+    deleteAllBtn.addEventListener('click', () => {
+        if (orders.length > 0) {
+            deleteMode = 'all';
+            confirmMessage.textContent = `정말로 모든 주문 기록을 삭제하시겠습니까?`;
+            confirmModal.style.display = 'flex';
+        } else {
+            alert('삭제할 주문이 없습니다.');
+        }
+    });
+    
+    // 확인 모달 - 예 버튼
+    confirmYesBtn.addEventListener('click', () => {
+        if (deleteMode === 'selected') {
+            deleteOrders(selectedOrderIds);
+        } else if (deleteMode === 'all') {
+            deleteOrders(orders.map(order => order.id));
+        } else if (deleteMode === 'single') {
+            deleteOrders(selectedOrderIds);
+        }
+        
+        confirmModal.style.display = 'none';
+        deleteMode = null;
+    });
+    
+    // 확인 모달 - 아니요 버튼
+    confirmNoBtn.addEventListener('click', () => {
+        confirmModal.style.display = 'none';
+        deleteMode = null;
+    });
+    
     // 모달 닫기 버튼
-    document.querySelector('.close-modal').addEventListener('click', () => {
-        orderDetailsModal.style.display = 'none';
+    document.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const modal = btn.closest('.modal');
+            modal.style.display = 'none';
+            if (modal === confirmModal) {
+                deleteMode = null;
+            }
+        });
     });
     
     // 모달 외부 클릭 시 닫기
     window.addEventListener('click', (e) => {
         if (e.target === orderDetailsModal) {
             orderDetailsModal.style.display = 'none';
+        }
+        if (e.target === confirmModal) {
+            confirmModal.style.display = 'none';
+            deleteMode = null;
         }
     });
     
